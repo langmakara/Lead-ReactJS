@@ -1,38 +1,33 @@
-import { Box, Button, Input, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Button, HStack, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { limitProduct } from "../api/product";
 import { useGetProducts } from "../hooks/product";
 
 export default function BasicTable1() {
-  const {data,isLoading } = useGetProducts();
-console.log(data);
+  const [page, setPage] = useState(1);
 
+  const { data, isLoading } = useGetProducts({
+    payload: {page, limit:10},
+    config: {
+      enabled: true,
+      staleTime: 1000 * 60 * 5,
+    }
+  });
 
-  const [limit, setLimit] = useState(10);
-  const [limitData, setLimitData] = useState([]);
-
-  const handleLimit = () => {
-    limitProduct(limit)
-      .then((res) => {
-        setLimitData(res);
-      })
-      .catch((err) => {
-      });
-  };
+  const totalPages = data ? Math.ceil(data.total / 10) : 0;
 
   const columns = useMemo(() => {
     return [
       { Header: "ID", accessor: "id" },
       { Header: "Title", accessor: "title" },
       { Header: "Price", accessor: "price" },
-      { Header: "Action", accessor: "action" },
+      { Header: "Stock", accessor: "stock" },
       { Header: "Description", accessor: "description" },
     ];
   }, []);
 
   return (
     <Box>
-      <TableContainer shadow="2xl">
+      <TableContainer shadow="2xl" rounded="lg">
         <Box>
           <Table variant="simple">
             <Thead>
@@ -44,19 +39,17 @@ console.log(data);
             </Thead>
             <Tbody>
               {isLoading && (
-                <>
-                  <Tr>
-                    <Th colSpan={columns.length}>
-                      <Stack w="full">
-                        <Skeleton height="20px" />
-                        <Skeleton height="20px" />
-                        <Skeleton height="20px" />
-                      </Stack>
-                    </Th>
-                  </Tr>
-                </>
+                <Tr>
+                  <Th colSpan={columns.length}>
+                    <Stack w="full">
+                      <Skeleton height="20px" />
+                      <Skeleton height="20px" />
+                      <Skeleton height="20px" />
+                    </Stack>
+                  </Th>
+                </Tr>
               )}
-              {data?.map((products) => (
+              {data?.products?.map((products) => (
                 <Tr key={products.id}>
                   {columns.map((column) => (
                     <Td key={column.accessor}>{products[column.accessor]}</Td>
@@ -67,10 +60,15 @@ console.log(data);
           </Table>
         </Box>
       </TableContainer>
-      <Input mt={4} bg="AccentColorText" placeholder="Limit" value={limit} onChange={(e) => setLimit(e.target.value)} onBlur={handleLimit} />
-      <Button onClick={handleLimit} m={4} variant="solid" colorScheme="blue">
-        Show 10 Product
-      </Button>
+      <HStack justify="center" mt={4} spacing={4}>
+        <Button colorScheme="blue" onClick={() => setPage((p) => Math.max(1, p - 1))} isDisabled={page === 1}>
+          Previous
+        </Button>
+        <Button colorScheme="blue" variant="outline" isDisabled>Page {page} of {totalPages}</Button>
+        <Button colorScheme="blue" onClick={() => setPage((p) => p + 1)} isDisabled={page >= totalPages}>
+          Next
+        </Button> 
+      </HStack>
     </Box>
   );
 }
