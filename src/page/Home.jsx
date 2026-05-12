@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Button, Spacer, HStack, VStack, Text, SimpleGrid, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Stack, Skeleton } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import BasicTable1 from "../components/Table";
-import BasicTable from "../components/ReactTable";
+//import BasicTable from "../components/ReactTable";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -65,12 +65,12 @@ const Home = () => {
           </SimpleGrid>
         </VStack>
       </Box>
-      <Box p={8}>
+      {/* <Box p={8}>
         <BasicTable />
-      </Box>
+      </Box> */}
       <Box p={8}>
         <BasicTable1 />
-      </Box>
+      </Box>/
     </Box>
   );
 };

@@ -1,34 +1,12 @@
 import { Box, Button, Input, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { limitProduct } from "../api/product";
+import { useGetProducts } from "../hooks/product";
 
 export default function BasicTable1() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const {data,isLoading } = useGetProducts();
+console.log(data);
 
-  // useEffect(() => {
-  //   getAllProduct().then((res) => {
-  //     setData(res);
-  //     setLoading(false);
-  //   }).catch((err) => {
-  //     setError(err);
-  //     setLoading(false);
-  //   });
-  // }, []);
-
-  // const [name, setName] = useState("");
-  // const [searchData, setSearchData] = useState([]);
-
-  // const handleSearch = () => {
-  //   searchProduct(name).then((res) => {
-  //     setSearchData(res);
-  //     setLoading(false);
-  //   }).catch((err) => {
-  //     setError(err);
-  //     setLoading(false);
-  //   });
-  // }
 
   const [limit, setLimit] = useState(10);
   const [limitData, setLimitData] = useState([]);
@@ -37,14 +15,10 @@ export default function BasicTable1() {
     limitProduct(limit)
       .then((res) => {
         setLimitData(res);
-        setLoading(false);
       })
       .catch((err) => {
-        setError(err);
-        setLoading(false);
       });
   };
-  console.log(loading);
 
   const columns = useMemo(() => {
     return [
@@ -58,12 +32,6 @@ export default function BasicTable1() {
 
   return (
     <Box>
-      {/* <Input
-        placeholder="Search"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onBlur={handleSearch}
-      /> */}
       <TableContainer shadow="2xl">
         <Box>
           <Table variant="simple">
@@ -75,7 +43,7 @@ export default function BasicTable1() {
               </Tr>
             </Thead>
             <Tbody>
-              {loading && (
+              {isLoading && (
                 <>
                   <Tr>
                     <Th colSpan={columns.length}>
@@ -88,7 +56,7 @@ export default function BasicTable1() {
                   </Tr>
                 </>
               )}
-              {limitData?.map((products) => (
+              {data?.map((products) => (
                 <Tr key={products.id}>
                   {columns.map((column) => (
                     <Td key={column.accessor}>{products[column.accessor]}</Td>
