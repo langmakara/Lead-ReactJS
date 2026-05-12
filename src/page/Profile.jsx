@@ -1,8 +1,7 @@
-import { Box, Flex, Heading, Button, Spacer, HStack, VStack, Text, Avatar, Divider, Image } from '@chakra-ui/react'
-import { IconButton } from '@chakra-ui/react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { Box, Flex, Heading, Button, Text, Avatar,  Image, IconButton } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import { vh } from 'framer-motion'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+
 
 const Profile = () => {
     return (
@@ -21,12 +20,12 @@ const Profile = () => {
                     <Text>Creator, Chakra UI</Text>
                     </Box>
                 </Flex>
-                {/* <IconButton
+                <IconButton 
                     variant='ghost'
                     colorScheme='gray'
                     aria-label='See menu'
                     icon={<BsThreeDotsVertical />}
-                /> */}
+                />
                 </Flex>
             </CardHeader>
             <CardBody>

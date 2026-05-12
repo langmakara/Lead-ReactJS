@@ -8,7 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 const rootElement = document.getElementById('root')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme} >
       <BrowserRouter>
         <App />
       </BrowserRouter>

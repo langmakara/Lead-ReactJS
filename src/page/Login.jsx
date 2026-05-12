@@ -1,27 +1,46 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Flex, Text, VStack, Input, Button, SimpleGrid, Image } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import heroImg from '../assets/hero.png'
 import Building from '../assets/Building.jpg'
-import Form from './Form'
 
 export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
   const navigate = useNavigate()
+  const toast = useToast()
+
 
   const handleLogin = () => {
+    const toastId = 'login-toast'
     const validUser = username.trim() === 'admin'
     const validPassword = password === '1234'
 
+    if (toast.isActive(toastId)) return;
     if (validUser && validPassword) {
-      setMessage('Login successful')
-      navigate('/Form', { state: { username } })
-      return
+      toast({
+        id: toastId,
+        title: 'Login successful.',
+        description: "Welcome back, admin!",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      setTimeout(() => {
+        navigate('/Home')
+      }, 3000)
     }
-
-    setMessage('Invalid username or password')
+    else {
+      toast({
+        id: toastId,
+        title: 'Login failed.',
+        description: "Invalid username or password.",
+        status: 'error',  
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -54,12 +73,14 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <Button colorScheme='blue' size='md' width='300px' onClick={handleLogin}>
+            <Button
+              colorScheme='blue' 
+              size='md' 
+              width='300px'
+              onClick={handleLogin} // Simply call the function here
+            >
               Login
             </Button>
-            {message && (
-              <Text color={message.includes('successful') ? 'green.500' : 'red.500'}>{message}</Text>
-            )}
           </VStack>
         </Flex>
       </SimpleGrid>
