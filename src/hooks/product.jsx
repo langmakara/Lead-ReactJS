@@ -21,9 +21,6 @@ export const useLimitProducts = (limit) => {
     return useQuery({
         queryKey: ["products",limit],
         queryFn: () => limitProduct(limit),
-        refetchOnWindowFocus: false,
-        staleTime: 1000 * 60 * 5,
-        retry: 1,
         onSuccess: (data) => console.log("Data", data),
         onError: (error) => console.log("Error", error),
     });

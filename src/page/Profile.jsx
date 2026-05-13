@@ -6,7 +6,7 @@ import EditProfileInfo from "../components/EditProfileInfo";
 
 const Profile = () => {
     return (
-        <Box>
+        <Box h={"100vh"}>
             <UserInfo />
             <EditProfileInfo />
         </Box>

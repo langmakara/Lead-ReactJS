@@ -1,6 +1,7 @@
 import { Box, Flex, Heading, Button, Spacer, HStack, VStack, Text, SimpleGrid, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Stack, Skeleton } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import BasicTable1 from "../components/Table";
+import NewEmployee from "../components/NewEmployee";
 //import BasicTable from "../components/ReactTable";
 
 const Home = () => {
@@ -12,7 +13,7 @@ const Home = () => {
 
   return (
     <Box minH="100vh" bg="gray.50">
-      <Flex as="nav" bg="tomato" color="white" p={4} align="center">
+      <Flex as="nav" bg="#C527F5" color="white" p={4} align="center">
         <Heading size="lg">Lead-ReactJS</Heading>
         <Spacer />
         <HStack spacing={6}>
@@ -22,10 +23,10 @@ const Home = () => {
           <Button variant="ghost" color="white" _hover={{ bg: "whiteAlpha.200" }} onClick={() => navigate("/Profile")}>
             Profile
           </Button>
-          <Button variant="solid" colorScheme="whiteAlpha" onClick={handleLogout}>
+          <Button variant="solid"  colorScheme="red" onClick={handleLogout}>
             Logout
           </Button>
-        </HStack>
+        </HStack> 
       </Flex>
 
       <Box p={8}>
@@ -65,12 +66,12 @@ const Home = () => {
           </SimpleGrid>
         </VStack>
       </Box>
-      {/* <Box p={8}>
-        <BasicTable />
-      </Box> */}
       <Box p={8}>
         <BasicTable1 />
-      </Box>/
+      </Box>
+      <Box p={8}>
+        <NewEmployee />
+      </Box>
     </Box>
   );
 };

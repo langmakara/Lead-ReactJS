@@ -4,10 +4,10 @@ import * as ReactDOM from "react-dom/client";
 import theme from "./theme";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
+import queryClient from "./utils/queryClient";
 
 const rootElement = document.getElementById("root");
-const queryClient = new QueryClient();
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>

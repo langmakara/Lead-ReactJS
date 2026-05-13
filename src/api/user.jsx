@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getAllUser = () => {
+export const getAllUser = async () => {
     try {
-        const response = axios.get("https://dummyjson.com/users");
+        const response = await axios.get("https://dummyjson.com/users");
         return response.data.users;
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -20,7 +20,7 @@ export const getSingleUser = async (id) => {
     }
 }
 
-export const updateSingleUser = async (id, userData) => {
+export const updateSingleUser = async ({ id, ...userData }) => {
     try {
         const response = await axios.put(`https://dummyjson.com/users/${id}`, userData);
         return response.data;
@@ -30,3 +30,22 @@ export const updateSingleUser = async (id, userData) => {
     }
 }
 
+export const addNewUser = async (userData) => {
+    try {
+        const response = await axios.post(`https://dummyjson.com/users/add`, userData);
+        return response.data.users.add;
+    } catch (error) {
+        console.error("Error adding user:", error);
+        throw error;
+    }
+}
+
+export const deleteSingleUser = async (id) => {
+    try {
+        const response = await axios.delete(`https://dummyjson.com/users/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        throw error;
+    }
+}
