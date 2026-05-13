@@ -1,7 +1,8 @@
-import { Box, Button, HStack, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, useToast, Tr, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, HStack, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, useToast, Tr, useDisclosure, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { useDeleteEmployee, useGetEmployee } from "../hooks/employee";
+import { useDeleteEmployee, useGetEmployee, useSearchUser } from "../hooks/employee";
 import EditEmployee from "./EditEmployee";
+import { IoSearchCircleOutline } from "react-icons/io5";
 
 export const NewEmployee = () => {
   const { data, isLoading } = useGetEmployee();
@@ -15,7 +16,26 @@ export const NewEmployee = () => {
   const [userCity, setUserCity] = useState(null);
   const [userState, setUserState] = useState(null);
   const [userCountry, setUserCountry] = useState(null);
+  const [searchData, setSearchData] = useState(null);
   const toast = useToast();
+
+  const { mutateAsync: searchEmployee, isLoading: searchLoading } = useSearchUser({
+    onSuccess: (data) => {
+      setSearchData(data);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error searching employee",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const displayData = searchData ?? data;
+
 
   const { mutateAsync: deleteEmployee, isLoading: deleteLoading } = useDeleteEmployee({
     onSuccess: () => {
@@ -50,6 +70,14 @@ export const NewEmployee = () => {
   return (
     <Box>
       <TableContainer shadow="2xl" rounded="lg">
+        <Box p={4}>
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <IoSearchCircleOutline size="20px" color="gray.300" />
+            </InputLeftElement>
+            <Input isInvalid={searchLoading} outline="2px solid blue" placeholder="Search employee" onChange={(e) => { const value = e.target.value; if (!value) { setSearchData(null); return; } searchEmployee(value); }} />
+          </InputGroup>
+        </Box>
         <Box>
           <Table variant="simple">
             <Thead>
@@ -76,7 +104,7 @@ export const NewEmployee = () => {
                   </Th>
                 </Tr>
               )}
-              {data?.map((user) => (
+              {displayData?.map((user) => (
                 <Tr key={user.id}>
                   <Td>{user.id}</Td>
                   <Td>

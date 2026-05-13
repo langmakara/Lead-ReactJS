@@ -49,3 +49,13 @@ export const deleteSingleUser = async (id) => {
         throw error;
     }
 }
+
+export const searchUser = async (search) => {
+    try {
+        const response = await axios.get(`https://dummyjson.com/users/search?q=${search}`);
+        return response.data.users;
+    } catch (error) {
+        console.error("Error searching user:", error);
+        throw error;
+    }
+}   

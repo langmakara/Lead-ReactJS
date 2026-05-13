@@ -60,10 +60,10 @@ export const EditEmployee = ({ isOpen, onClose, userId, firstName, lastName, use
               <Input {...register("country")} defaultValue={userCountry} mb={3} />
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
+              <Button variant="ghost" mr={3} onClick={onClose}>
                 Close
               </Button>
-              <Button variant="ghost" type="submit" isLoading={updateLoading}>Submit</Button>
+              <Button colorScheme="blue" type="submit" isLoading={updateLoading}>Submit</Button>
             </ModalFooter>
           </Box>
         </ModalContent>
