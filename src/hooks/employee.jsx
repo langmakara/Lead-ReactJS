@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { addNewUser, deleteSingleUser, getAllUser, searchUser, updateSingleUser } from "../api/user";
+import { addNewUser, deleteSingleUser, getAllUser, getSingleUser, searchUser, updateSingleUser } from "../api/user";
 
 
 const GET_EMPLOYEE = "GET_EMPLOYEE";
@@ -7,6 +7,7 @@ const ADD_EMPLOYEE = "ADD_EMPLOYEE";
 const UPDATE_EMPLOYEE = "UPDATE_EMPLOYEE";
 const DELETE_EMPLOYEE = "DELETE_EMPLOYEE";
 const SEARCH_USER = "SEARCH_USER";
+const GET_USER = "GET_USER";
 
 export const useInvalidateEmployee = () => {
     const queryClient = useQueryClient();
@@ -79,5 +80,19 @@ export const useSearchUser = ({onSuccess, onError}) => {
     onError: (error) => {
       if (onError) onError(error);
     },
+  });
+}
+
+export const useGetUser = (id, {onSuccess, onError} = {}) => {
+  return useQuery({
+    queryKey: [GET_USER, id],
+    queryFn: () => getSingleUser(id),
+    onSuccess: (data) => {
+      if (onSuccess) onSuccess(data);
+    },
+    onError: (error) => {
+      if (onError) onError(error);
+    },
+    enabled: !!id
   });
 }

@@ -7,7 +7,7 @@ import { getSingleUser, updateSingleUser } from "../api/user";
 export const EditProfileInfo = () => {
   const toast = useToast();
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["users"],

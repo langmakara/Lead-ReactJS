@@ -19,6 +19,7 @@ export default function Login() {
 
     if (toast.isActive(toastId)) return;
     if (validUser && validPassword) {
+      localStorage.setItem("userToken", "authenticated")
       toast({
         id: toastId,
         title: 'Login successful.',
@@ -28,7 +29,7 @@ export default function Login() {
         isClosable: true,
       })
       setTimeout(() => {
-        navigate('/Home')
+        navigate('/Home', { replace: true })
       }, 3000)
     }
     else {
@@ -51,7 +52,7 @@ export default function Login() {
         </Flex>
         <Flex direction="column" align="center" justify="center" p={10} h="100vh">
           <VStack spacing={4} align='center' mt={4}>
-            <Image src={heroImg} alt="Hero" className="w-full h-auto" boxSize='100px' center />
+            <Image src={heroImg} alt="Hero" className="w-full h-auto" boxSize='100px' />
             <Text fontSize='3xl' color='blue.500' fontWeight='bold' mt={4}>
               Welcome!
             </Text>

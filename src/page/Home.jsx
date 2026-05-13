@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, Button, Spacer, HStack, VStack, Text, SimpleGrid, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Stack, Skeleton } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { Box, Flex, Heading, Button, Spacer, HStack, VStack, Text, SimpleGrid, Stat, StatLabel, StatNumber, StatHelpText, StatArrow } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import BasicTable1 from "../components/Table";
 import NewEmployee from "../components/NewEmployee";
@@ -7,8 +8,18 @@ import NewEmployee from "../components/NewEmployee";
 const Home = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   const handleLogout = () => {
-    navigate("/");
+    localStorage.removeItem("userToken");
+    navigate("/", { replace: true });
   };
 
   return (
@@ -22,6 +33,9 @@ const Home = () => {
           </Button>
           <Button variant="ghost" color="white" _hover={{ bg: "whiteAlpha.200" }} onClick={() => navigate("/Profile")}>
             Profile
+          </Button>
+          <Button variant="ghost" color="white" _hover={{ bg: "whiteAlpha.200" }} onClick={() => navigate("/employee/list")}>
+            Employee
           </Button>
           <Button variant="solid"  colorScheme="red" onClick={handleLogout}>
             Logout

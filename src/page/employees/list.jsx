@@ -1,15 +1,14 @@
-import { Box, Button, HStack, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, useToast, Tr, useDisclosure, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Box, Button, HStack, Input, InputGroup, InputLeftElement, Skeleton, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { useDeleteEmployee, useGetEmployee, useSearchUser } from "../hooks/employee";
-import EditEmployee from "./EditEmployee";
 import { IoSearchCircleOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { useGetEmployee, useSearchUser } from "../../hooks/employee";
 
-export const NewEmployee = () => {
+const List = () => {
   const { data, isLoading } = useGetEmployee();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchData, setSearchData] = useState(null);
-  const [selectId, setSelectId] = useState(null);
   const toast = useToast();
+  const navigate = useNavigate();
 
   const { mutateAsync: searchEmployee, isLoading: searchLoading } = useSearchUser({
     onSuccess: (data) => {
@@ -18,29 +17,6 @@ export const NewEmployee = () => {
     onError: (error) => {
       toast({
         title: "Error searching employee",
-        description: error.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    },
-  });
-
-  const displayData = searchData ?? data;
-
-
-  const { mutateAsync: deleteEmployee, isLoading: deleteLoading } = useDeleteEmployee({
-    onSuccess: () => {
-      toast({
-        title: "Employee deleted successfully",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error deleting employee",
         description: error.message,
         status: "error",
         duration: 5000,
@@ -59,17 +35,44 @@ export const NewEmployee = () => {
     [],
   );
 
+  const displayData = searchData ?? data;
+
   return (
-    <Box>
+    <Box p={8}>
+      <Button onClick={() => navigate(-1)} colorScheme="blue" mb={3}>
+        Back
+      </Button>
+      <Button
+        colorScheme="blue"
+        size="sm"
+        onClick={() => {
+          navigate(`/employee/add`);
+        }}
+      >
+        Add
+      </Button>
       <TableContainer shadow="2xl" rounded="lg">
         <Box p={4}>
           <InputGroup>
             <InputLeftElement pointerEvents="none">
               <IoSearchCircleOutline size="20px" color="gray.300" />
             </InputLeftElement>
-            <Input isInvalid={searchLoading} outline="2px solid blue" placeholder="Search employee" onChange={(e) => { const value = e.target.value; if (!value) { setSearchData(null); return; } searchEmployee(value); }} />
+            <Input
+              isInvalid={searchLoading}
+              outline="2px solid blue"
+              placeholder="Search employee"
+              onChange={(e) => {
+                const value = e.target.value;
+                if (!value) {
+                  setSearchData(null);
+                  return;
+                }
+                searchEmployee(value);
+              }}
+            />
           </InputGroup>
         </Box>
+
         <Box>
           <Table variant="simple">
             <Thead>
@@ -109,19 +112,10 @@ export const NewEmployee = () => {
                         colorScheme="blue"
                         size="sm"
                         onClick={() => {
-                          setSelectId(user);
-                          onOpen();
+                          navigate(`/employee/edit/${user.id}`);
                         }}
                       >
                         Edit
-                      </Button>
-                      <Button
-                        isLoading={deleteLoading}
-                        onClick={() => deleteEmployee(user.id)}
-                        colorScheme="red"
-                        size="sm"
-                      >
-                        Delete
                       </Button>
                     </HStack>
                   </Td>
@@ -131,9 +125,8 @@ export const NewEmployee = () => {
           </Table>
         </Box>
       </TableContainer>
-      <EditEmployee isOpen={isOpen} onClose={onClose} selectId={selectId} />
     </Box>
   );
 };
 
-export default NewEmployee;
+export default List;

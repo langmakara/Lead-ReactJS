@@ -33,7 +33,7 @@ export const updateSingleUser = async ({ id, ...userData }) => {
 export const addNewUser = async (userData) => {
     try {
         const response = await axios.post(`https://dummyjson.com/users/add`, userData);
-        return response.data.users.add;
+        return response.data;
     } catch (error) {
         console.error("Error adding user:", error);
         throw error;
@@ -58,4 +58,20 @@ export const searchUser = async (search) => {
         console.error("Error searching user:", error);
         throw error;
     }
-}   
+}
+
+export const loginUser = async (username, password, token) => {
+    try {
+        const response = await axios.post(`https://dummyjson.com/users/login`, { username, password, token },
+        token && {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error logging in:", error);
+        throw error;
+    }
+}

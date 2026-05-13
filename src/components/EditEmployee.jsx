@@ -1,11 +1,23 @@
 import { Box, Button, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, useToast, VStack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useUpdateEmployee } from "../hooks/employee";
+import { useEffect } from "react";
 
-export const EditEmployee = ({ isOpen, onClose, userId, firstName, lastName, userEmail, userPhone, userAddress, userCity, userState, userCountry }) => {
-  const { register, handleSubmit } = useForm();
+export const EditEmployee = ({ isOpen, onClose, selectId }) => {
+  const { register, handleSubmit, reset } = useForm();
   const toast = useToast();
-  
+  const {id, firstName, lastName,}=selectId || {};
+  useEffect(() => {
+    if (selectId) {
+      reset({
+        ...selectId,
+        address: selectId.address.address,
+        city: selectId.address.city,
+        state: selectId.address.state,
+        country: selectId.address.country
+      });
+    }
+  }, [selectId, reset]);
   const {mutateAsync: updateEmployee, isLoading: updateLoading} = useUpdateEmployee({
     onSuccess: () => {
       toast({
@@ -28,9 +40,21 @@ export const EditEmployee = ({ isOpen, onClose, userId, firstName, lastName, use
     }
   });
   // submit function (send data to updateEmployee mutation)
-  const onSubmit = (data) => {
-    updateEmployee({ id: userId, ...data });
-    console.log(data);  
+  const onSubmit = async (data) => {
+    const json = {
+      firstName:data.firstName,
+      lastName:data.lastName,
+      email:data.email,
+      phone:data.phone,
+      address: {
+        address:data.address,
+        city:data.city,
+        state:data.state,
+        country:data.country
+      }
+    }
+    await updateEmployee({ id, ...json });
+    console.log(json);
   };
 
   return (
@@ -46,18 +70,18 @@ export const EditEmployee = ({ isOpen, onClose, userId, firstName, lastName, use
               <VStack>
                 <FormControl>
                   <SimpleGrid columns={2} spacing={4}>
-                    <Input {...register("firstName")} defaultValue={firstName} mb={3} />
-                    <Input {...register("lastName")} defaultValue={lastName} mb={3} />
+                    <Input {...register("firstName")}  mb={3} />
+                    <Input {...register("lastName")} mb={3} />
                   </SimpleGrid> 
                 </FormControl>
               </VStack>
               
-              <Input {...register("email")} defaultValue={userEmail} mb={3} />
-              <Input {...register("phone")} defaultValue={userPhone} mb={3} />
-              <Input {...register("address")} defaultValue={userAddress} mb={3} />
-              <Input {...register("city")} defaultValue={userCity} mb={3} />
-              <Input {...register("state")} defaultValue={userState} mb={3} />
-              <Input {...register("country")} defaultValue={userCountry} mb={3} />
+              <Input {...register("email")}  mb={3} />
+              <Input {...register("phone")}  mb={3} />
+              <Input {...register("address")}  mb={3} />
+              <Input {...register("city")}  mb={3} />
+              <Input {...register("state")}  mb={3} />
+              <Input {...register("country")}  mb={3} />
             </ModalBody>
             <ModalFooter>
               <Button variant="ghost" mr={3} onClick={onClose}>
